@@ -1,6 +1,6 @@
 MERNSTACK LEARNING JOURNEY
 # ABOUT ME
-I am sriram fron the class of *3rd year csetf today we started to learn about *IMERN STACK,
+I am sriram fron the class of *3rd year cse if today we started to learn about *IMERN STACK,
 
 ## OBJEGTIVE：
 **mern is a popular full stack java script frane work used to build morden web application.
@@ -33,4 +33,5 @@ Day7: React Basics
 
 
 Day8: React State & Hooks
+
 
