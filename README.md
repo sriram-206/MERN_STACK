@@ -1,12 +1,13 @@
 # MERNSTACK LEARNING JOURNEY
 
-## About Me
 
-Iam Sriram p  from class of **3rd year CSE** today we've started to learn about Mern stack and web development.On day 1 we learned about basics of web development and mern stack.
 
-## Objective
+## Objective# ABOUT ME
+I am sriram fron the class of *3rd year csetf today we started to learn about *IMERN STACK,
 
-Mern stack is a technology used to creste a bth static and dynamic websites.
+## OBJEGTIVE：
+**mern is a popular ful1 stack java script frane work used to build morden web application.
+**its is uses one Language (javascript) from front end to back end-clean and efficient
 
 ## Stack Overflow
 
@@ -35,3 +36,4 @@ Day6: Advanced JAvascript
 Day7: React Basics
 
 Day8: React State & Hooks
+
