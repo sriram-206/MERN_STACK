@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sriram - Personal Profile Page</title>
+</head>
+
+<body>
+
+<header>
+    <h1>Sriram</h1>
+    <p>Welcome to my personal HTML5 profile page.</p>
+</header>
+
+<nav>
+    <h2>Navigation</h2>
+    <ul>
+        <li><a href="#about">About Me</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#academics">Academic Records</a></li>
+        <li><a href="#contact">Contact Me</a></li>
+    </ul>
+</nav>
+
+<section id="about">
+    <h2>About Me</h2>
+
+    <article>
+        <h3>My Bio</h3>
+        <p>
+            Hello! My name is <strong>Sriram</strong>. I am a passionate 
+            <em>Computer Science student</em> who loves learning new technologies.
+            I am currently working on <u>web development</u> and 
+            <code>Python programming</code>.
+        </p>
+
+        <p>
+            I enjoy solving problems and building real-world projects.
+            Sometimes I make mistakes <s>but I never give up</s>.
+            I believe practice<sup>2</sup> makes perfect and I drink H<sub>2</sub>O 
+            while coding!
+        </p>
+    </article>
+
+    <details>
+        <summary>Click to know my career goal</summary>
+        <p>
+            My goal is to become a skilled software developer and work on innovative
+            projects in web and mobile application development.
+        </p>
+    </details>
+
+    <figure>
+        <img src="profile.jpg" alt="Profile picture of Sriram" width="200">
+        <figcaption>My Profile Picture</figcaption>
+        Fallback: Your browser does not support images.
+    </figure>
+
+    <figure>
+        <audio controls>
+            <source src="intro.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+        <figcaption>Audio Introduction</figcaption>
+    </figure>
+
+</section>
+
+<section id="skills">
+    <h2>Skills</h2>
+
+    <h3>Technical Skills (Ordered List)</h3>
+    <ol>
+        <li>HTML5</li>
+        <li>Python</li>
+        <li>Flutter</li>
+        <li>Arduino</li>
+    </ol>
+
+    <h3>Hobbies (Unordered List)</h3>
+    <ul>
+        <li>Coding</li>
+        <li>Learning New Technologies</li>
+        <li>Watching Tech Videos</li>
+        <li>Playing Games</li>
+    </ul>
+
+    <h3>Skill Progress</h3>
+
+    <p>HTML: <progress value="80" max="100"></progress> 80%</p>
+    <p>Python: <progress value="75" max="100"></progress> 75%</p>
+    <p>Flutter: <progress value="60" max="100"></progress> 60%</p>
+
+</section>
+
+<section id="academics">
+    <h2>Academic Records</h2>
+
+    <table border="1">
+        <caption>Semester Marks</caption>
+        <thead>
+            <tr>
+                <th>Subject</th>
+                <th>Marks</th>
+                <th>Grade</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Data Structures</td>
+                <td>85</td>
+                <td>A</td>
+            </tr>
+            <tr>
+                <td>Computer Networks</td>
+                <td>88</td>
+                <td>A</td>
+            </tr>
+            <tr>
+                <td>Operating Systems</td>
+                <td>82</td>
+                <td>B+</td>
+            </tr>
+            <tr>
+                <td>Database Management</td>
+                <td>90</td>
+                <td>A+</td>
+            </tr>
+        </tbody>
+    </table>
+
+</section>
+
+<section id="contact">
+    <h2>Contact Me</h2>
+
+    <form action="#" method="post">
+
+        <p>
+            <label for="name">Full Name:</label>
+            <input type="text" id="name" name="name" required>
+        </p>
+
+        <p>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+        </p>
+
+        <fieldset>
+            <legend>Gender</legend>
+            <label>
+                <input type="radio" name="gender" value="male"> Male
+            </label>
+            <label>
+                <input type="radio" name="gender" value="female"> Female
+            </label>
+        </fieldset>
+
+        <fieldset>
+            <legend>Interests</legend>
+            <label><input type="checkbox" name="interest" value="coding"> Coding</label>
+            <label><input type="checkbox" name="interest" value="music"> Music</label>
+            <label><input type="checkbox" name="interest" value="sports"> Sports</label>
+        </fieldset>
+
+        <p>
+            <label for="contact-method">Preferred Contact Method:</label>
+            <select id="contact-method" name="contact-method">
+                <option>Email</option>
+                <option>Phone</option>
+                <option>WhatsApp</option>
+            </select>
+        </p>
+
+        <p>
+            <button type="submit">Submit</button>
+        </p>
+
+    </form>
+
+</section>
+
+<footer>
+    <h2>Footer</h2>
+    <p>&copy; 2026 Sriram. All Rights Reserved.</p>
+</footer>
+
+</body>
+</html>
