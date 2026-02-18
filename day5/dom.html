@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Notes App</title>
+    <style>
+        :root {
+            --bg-color: #f4f4f9;
+            --text-color: #333;
+            --card-bg: #ffffff;
+            --accent-color: #4a90e2;
+            --danger-color: #e74c3c;
+            --success-color: #2ecc71;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --text-color: #f4f4f9;
+            --card-bg: #2d2d2d;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        .btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn:hover { opacity: 0.8; }
+        .btn-complete { background: var(--success-color); color: white; }
+        .btn-delete { background: var(--danger-color); color: white; }
+        #theme-toggle { background: var(--accent-color); color: white; }
+
+        #notes-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .note {
+            background: var(--card-bg);
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            cursor: grab;
+        }
+
+        .note.dragging { opacity: 0.5; cursor: grabbing; }
+        .note.completed .text { text-decoration: line-through; opacity: 0.6; }
+
+        .actions { display: flex; gap: 5px; align-items: center; }
+        .color-picker { width: 30px; height: 30px; border: none; cursor: pointer; background: none; }
+
+        /* Modal Styles */
+        #modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+        .modal-content {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>My Notes</h1>
+            <button id="theme-toggle" class="btn">Dark Mode</button>
+        </header>
+
+        <div class="controls">
+            <form id="note-form" style="display: flex; gap: 5px;">
+                <input type="text" id="note-input" placeholder="Add a new note..." style="flex-grow: 1;">
+                <button type="submit" class="btn" style="background: var(--accent-color); color:white;">Add</button>
+            </form>
+            <input type="text" id="search" placeholder="Search notes...">
+            <button id="clear-completed" class="btn btn-delete">Clear Completed</button>
+        </div>
+
+        <ul id="notes-list"></ul>
+    </div>
+
+    <div id="modal">
+        <div class="modal-content">
+            <p>Delete all completed notes?</p>
+            <button id="modal-yes" class="btn btn-delete">Yes, Clear</button>
+            <button id="modal-no" class="btn">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const themeToggle = document.getElementById('theme-toggle');
+        const noteForm = document.getElementById('note-form');
+        const noteInput = document.getElementById('note-input');
+        const notesList = document.getElementById('notes-list');
+        const searchInput = document.getElementById('search');
+        const clearCompletedBtn = document.getElementById('clear-completed');
+        const modal = document.getElementById('modal');
+        const modalYes = document.getElementById('modal-yes');
+        const modalNo = document.getElementById('modal-no');
+
+        let draggedItem = null;
+
+        // Load data on start
+        window.addEventListener('DOMContentLoaded', loadNotes);
+
+        function saveNotes() {
+            const notes = [];
+            document.querySelectorAll('.note').forEach(li => {
+                notes.push({
+                    text: li.querySelector('.text').textContent,
+                    completed: li.classList.contains('completed'),
+                    color: li.style.backgroundColor
+                });
+            });
+            localStorage.setItem('notesData', JSON.stringify(notes));
+        }
+
+        function loadNotes() {
+            const data = JSON.parse(localStorage.getItem('notesData') || '[]');
+            data.reverse().forEach(item => {
+                const note = createNote(item.text);
+                if (item.completed) note.classList.add('completed');
+                note.style.backgroundColor = item.color;
+                note.querySelector('.color-picker').value = rgbToHex(item.color) || '#ffffff';
+                notesList.prepend(note);
+            });
+        }
+
+        function rgbToHex(col) {
+            if (!col || !col.startsWith('rgb')) return '#ffffff';
+            const rgb = col.match(/\d+/g);
+            return "#" + ((1 << 24) + (parseInt(rgb[0]) << 16) + (parseInt(rgb[1]) << 8) + parseInt(rgb[2])).toString(16).slice(1);
+        }
+
+        function createNote(text) {
+            const li = document.createElement('li');
+            li.className = 'note';
+            li.draggable = true;
+            li.innerHTML = `
+                <span class="text">${text}</span>
+                <div class="actions">
+                    <input type="color" class="color-picker" value="#ffffff" title="Pick color"/>
+                    <button class="btn btn-complete">Done</button>
+                    <button class="btn btn-delete">✕</button>
+                </div>
+            `;
+            return li;
+        }
+
+        noteForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const text = noteInput.value.trim();
+            if (!text) return;
+            notesList.prepend(createNote(text));
+            noteInput.value = '';
+            saveNotes();
+        });
+
+        notesList.addEventListener('click', (e) => {
+            const note = e.target.closest('.note');
+            if (!note) return;
+            if (e.target.matches('.btn-delete')) note.remove();
+            if (e.target.matches('.btn-complete')) note.classList.toggle('completed');
+            saveNotes();
+        });
+
+        notesList.addEventListener('input', (e) => {
+            if (e.target.matches('.color-picker')) {
+                e.target.closest('.note').style.backgroundColor = e.target.value;
+                saveNotes();
+            }
+        });
+
+        notesList.addEventListener('dblclick', (e) => {
+            if (e.target.matches('.text')) {
+                const span = e.target;
+                const input = document.createElement('input');
+                input.value = span.textContent;
+                span.replaceWith(input);
+                input.focus();
+                const finishEdit = () => {
+                    span.textContent = input.value.trim() || span.textContent;
+                    input.replaceWith(span);
+                    saveNotes();
+                };
+                input.onblur = finishEdit;
+                input.onkeydown = (ev) => { if (ev.key === 'Enter') finishEdit(); };
+            }
+        });
+
+        // Drag & Drop
+        notesList.addEventListener('dragstart', (e) => {
+            if (e.target.matches('.note')) {
+                draggedItem = e.target;
+                setTimeout(() => e.target.classList.add('dragging'), 0);
+            }
+        });
+        notesList.addEventListener('dragend', (e) => {
+            e.target.classList.remove('dragging');
+            saveNotes();
+        });
+        notesList.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            const afterElement = getDragAfterElement(notesList, e.clientY);
+            if (!afterElement) notesList.appendChild(draggedItem);
+            else notesList.insertBefore(draggedItem, afterElement);
+        });
+
+        function getDragAfterElement(container, y) {
+            const draggables = [...container.querySelectorAll('.note:not(.dragging)')];
+            return draggables.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+                return offset < 0 && offset > closest.offset ? { offset, element: child } : closest;
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            notesList.querySelectorAll('.note').forEach(note => {
+                note.style.display = note.innerText.toLowerCase().includes(query) ? 'flex' : 'none';
+            });
+        });
+
+        themeToggle.addEventListener('click', () => {
+            const isLight = document.documentElement.dataset.theme === 'light';
+            document.documentElement.dataset.theme = isLight ? 'dark' : 'light';
+            themeToggle.textContent = isLight ? 'Light Mode' : 'Dark Mode';
+        });
+
+        clearCompletedBtn.onclick = () => modal.style.display = 'flex';
+        modalNo.onclick = () => modal.style.display = 'none';
+        modalYes.onclick = () => {
+            document.querySelectorAll('.note.completed').forEach(n => n.remove());
+            modal.style.display = 'none';
+            saveNotes();
+        };
+    </script>
+</body>
+</html>
