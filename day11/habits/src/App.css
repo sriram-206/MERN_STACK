@@ -1,0 +1,56 @@
+/* App.css */
+
+/* Make body full height and center everything */
+body, html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f0f2f5;
+
+  display: flex;             /* use flexbox */
+  justify-content: center;   /* center horizontally */
+  align-items: center;       /* center vertically */
+  text-align: center;        /* center text inside */
+  flex-direction: column;    /* stack children vertically */
+}
+
+/* Optional: limit width of main container */
+#root {
+  width: 100%;
+  max-width: 600px;          /* keeps content from being too wide */
+  padding: 1rem;
+}
+
+/* Page title */
+h1 {
+  color: #333;
+  margin-bottom: 2rem;
+  font-weight: 600;
+}
+
+/* Habit card styles */
+.habit-container {
+  background-color: #fff;
+  margin: 0.5rem 0;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+}
+
+.habit-container:hover {
+  transform: translateY(-3px);
+}
+
+.status {
+  font-weight: bold;
+}
+
+.status-completed {
+  color: green;
+}
+
+.status-pending {
+  color: red;
+}
